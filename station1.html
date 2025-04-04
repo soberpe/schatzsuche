@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-  <h1>Station 1</h1>
+  <h1>📍 Station 1</h1>
 
   <!-- Teil 1: Tier erraten -->
   <div id="riddleSection">
@@ -38,7 +38,8 @@
 
   <!-- Teil 3: Kreativaufgabe -->
   <div id="uploadSection" class="hidden">
-    <h3>🎨 Zeichne einen Löwen oder zeig etwas Passendes</h3>
+    <h3>🎨 Zeichne ein Tier oder zeig etwas Passendes</h3>
+    <p>Zum Beispiel Mähne, Krallen oder Fleisch…</p>
     <input type="file" accept="image/*" onchange="previewFile()">
     <img id="preview">
   </div>
@@ -62,7 +63,7 @@
     function checkGuess() {
       const input = document.getElementById("guess").value.trim().toLowerCase();
       if (input.includes("löwe")) {
-        document.getElementById("riddleFeedback").textContent = "Richtig! 🦁";
+        document.getElementById("riddleFeedback").textContent = "Richtig! 🦁 Geschafft! Nun kommt Aufgabe 2.";
         document.getElementById("riddleSection").classList.add("hidden");
         document.getElementById("quizSection").classList.remove("hidden");
       } else {
@@ -79,7 +80,7 @@
     function checkQuiz() {
       const selected = document.getElementById("quizAnswer").value;
       if (selected === "3") {
-        document.getElementById("quizFeedback").textContent = "Stimmt! Ein Löwe kann bis zu 40 kg Fleisch fressen.";
+        document.getElementById("quizFeedback").textContent = "Stimmt! Ein Löwe kann bis zu 40 kg Fleisch fressen. Geschafft! Jetzt folgt Aufgabe 3.";
         document.getElementById("quizSection").classList.add("hidden");
         document.getElementById("uploadSection").classList.remove("hidden");
       } else {
