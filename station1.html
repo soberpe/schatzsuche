@@ -4,30 +4,19 @@
 <head>
   <meta charset="UTF-8">
   <title>Station 1 – Quiz</title>
-  <script src="config.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .hidden { display: none; }
-  </style>
-</head>
-<body>
-  <h1>🦍 Station 1: Affenrätsel</h1>
-  <p>Welches Tier frisst gern Bananen?</p>
-  <input type="text" id="answer" placeholder="Deine Antwort hier">
-  <button onclick="checkAnswer()">Antwort prüfen</button>
-  <p id="result"></p>
-
-  <h2>📸 Deine Zeichnung</h2>
-  <input type="file" accept="image/*" onchange="previewFile()">
-  <img id="preview" style="max-width: 300px; display: block; margin-top: 10px;">
-
-  <div id="next" class="hidden">
-    <h2>✅ Super! Scanne diesen QR-Code auf dem iPhone:</h2>
-    <img src="qr_navigate2.png" alt="QR zur Navigation" style="width: 200px;">
-    <audio id="success" src="sound.mp3"></audio>
-  </div>
-
   <script>
+    let OPENAI_API_KEY = localStorage.getItem("openai_key") || "";
+
+    function checkKey() {
+      if (!OPENAI_API_KEY) {
+        const key = prompt("🔑 Bitte gib deinen OpenAI API-Key ein:");
+        if (key) {
+          OPENAI_API_KEY = key;
+          localStorage.setItem("openai_key", key);
+        }
+      }
+    }
+
     function checkAnswer() {
       const input = document.getElementById("answer").value.trim().toLowerCase();
       if (input.includes("affe")) {
@@ -48,6 +37,29 @@
         reader.readAsDataURL(file);
       }
     }
+
+    window.onload = checkKey;
   </script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>🦍 Station 1: Affenrätsel</h1>
+  <p>Welches Tier frisst gern Bananen?</p>
+  <input type="text" id="answer" placeholder="Deine Antwort hier">
+  <button onclick="checkAnswer()">Antwort prüfen</button>
+  <p id="result"></p>
+
+  <h2>📸 Deine Zeichnung</h2>
+  <input type="file" accept="image/*" onchange="previewFile()">
+  <img id="preview" style="max-width: 300px; display: block; margin-top: 10px;">
+
+  <div id="next" class="hidden">
+    <h2>✅ Super! Scanne diesen QR-Code für die Navigation zur nächsten Station:</h2>
+    <img src="qr_googlemaps_navigation.png" alt="Navigation zur Station 2" style="width: 200px;">
+    <audio id="success" src="sound.mp3"></audio>
+  </div>
 </body>
 </html>
