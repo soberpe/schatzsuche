@@ -70,12 +70,12 @@
               "Authorization": "Bearer " + OPENAI_API_KEY
             },
             body: JSON.stringify({
-              model: "gpt-4-vision-preview",
+              model: "gpt-4-1106-vision-preview",
               messages: [
                 {
                   role: "user",
                   content: [
-                    { type: "text", text: "Beschreibe das hochgeladene Bild. Ist darauf ein Affe oder etwas mit Banane zu sehen?" },
+                    { type: "text", text: "Beschreibe das hochgeladene Bild. Ist darauf eine Computermaus zu sehen?" },
                     { type: "image_url", image_url: { url: base64Image } }
                   ]
                 }
