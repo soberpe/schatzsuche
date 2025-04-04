@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h1>🦍 Station 1: Affenrätsel (Debug-Modus)</h1>
+  <h1>🦍 Station 1: Affenrätsel (Debugg-Modus)</h1>
   <p>Zeichne ein Tier, das Bananen liebt, und lade ein Foto davon hoch:</p>
 
   <input type="file" accept="image/*" id="fileInput"><br>
@@ -70,7 +70,7 @@
               "Authorization": "Bearer " + OPENAI_API_KEY
             },
             body: JSON.stringify({
-              model: "gpt-4-1106-vision-preview",
+              model: "gpt-4o",
               messages: [
                 {
                   role: "user",
