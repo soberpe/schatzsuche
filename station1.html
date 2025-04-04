@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Station 1 – Quiz</title>
+  <script src="config.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <h1>🦍 Station 1: Affenrätsel</h1>
+  <p>Welches Tier frisst gern Bananen?</p>
+  <input type="text" id="answer" placeholder="Deine Antwort hier">
+  <button onclick="checkAnswer()">Antwort prüfen</button>
+  <p id="result"></p>
+
+  <h2>📸 Deine Zeichnung</h2>
+  <input type="file" accept="image/*" onchange="previewFile()">
+  <img id="preview" style="max-width: 300px; display: block; margin-top: 10px;">
+
+  <div id="next" class="hidden">
+    <h2>✅ Super! Scanne diesen QR-Code auf dem iPhone:</h2>
+    <img src="qr_navigate2.png" alt="QR zur Navigation" style="width: 200px;">
+    <audio id="success" src="sound.mp3"></audio>
+  </div>
+
+  <script>
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.trim().toLowerCase();
+      if (input.includes("affe")) {
+        document.getElementById("result").textContent = "Richtig! 🎉";
+        document.getElementById("next").classList.remove("hidden");
+        document.getElementById("success").play();
+      } else {
+        document.getElementById("result").textContent = "Hm, versuch's nochmal!";
+      }
+    }
+
+    function previewFile() {
+      const file = document.querySelector('input[type=file]').files[0];
+      const preview = document.getElementById("preview");
+      const reader = new FileReader();
+      reader.onloadend = () => { preview.src = reader.result; };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>

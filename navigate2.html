@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Navigation zur nächsten Station</title>
+  <style>
+    body { text-align: center; font-family: sans-serif; }
+    #arrow { width: 100px; margin-top: 20px; transform: rotate(0deg); transition: transform 0.2s linear; }
+  </style>
+</head>
+<body>
+  <h1>🧭 Folge dem Pfeil zum Schatz!</h1>
+  <img id="arrow" src="arrow.png" alt="Pfeil">
+  <p id="status">Lade GPS...</p>
+
+  <script>
+    const targetLat = 48.412;
+    const targetLon = 14.002;
+
+    function toRad(deg) { return deg * Math.PI / 180; }
+    function toDeg(rad) { return rad * 180 / Math.PI; }
+
+    function calculateBearing(lat1, lon1, lat2, lon2) {
+      const dLon = toRad(lon2 - lon1);
+      const y = Math.sin(dLon) * Math.cos(toRad(lat2));
+      const x = Math.cos(toRad(lat1)) * Math.sin(toRad(lat2)) -
+                Math.sin(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.cos(dLon);
+      return (toDeg(Math.atan2(y, x)) + 360) % 360;
+    }
+
+    let heading = 0;
+
+    window.addEventListener("deviceorientationabsolute", (event) => {
+      heading = event.alpha;
+    }, true);
+
+    navigator.geolocation.watchPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      const bearing = calculateBearing(lat, lon, targetLat, targetLon);
+      const direction = (bearing - heading + 360) % 360;
+      document.getElementById("arrow").style.transform = `rotate(${direction}deg)`;
+      const dist = Math.hypot(lat - targetLat, lon - targetLon);
+      document.getElementById("status").textContent = dist < 0.0001
+        ? "🎉 Du bist am Ziel!"
+        : "Gehe weiter in Richtung des Pfeils!";
+    }, () => {
+      document.getElementById("status").textContent = "GPS nicht verfügbar.";
+    });
+  </script>
+</body>
+</html>
