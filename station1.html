@@ -1,113 +1,58 @@
+
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Station 1 – Debug</title>
+  <title>Station 1 – Löwe</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
     .hidden { display: none; }
-    .debug { font-size: 0.9em; color: #666; white-space: pre-wrap; background: #f5f5f5; padding: 10px; margin-top: 10px; }
+    #preview { max-width: 300px; display: block; margin-top: 10px; }
+    #next img { width: 200px; margin-top: 20px; }
   </style>
 </head>
 <body>
-  <h1>🦍 Station 1: Affenrätsel (Debugg-Modus)</h1>
-  <p>Zeichne ein Tier, das Bananen liebt, und lade ein Foto davon hoch:</p>
+  <h1>🦁 Station 1 – Löwe</h1>
+  <p><strong>Aufgabe:</strong> Der König der Tiere brüllt laut – doch sein Magen ist leer. Sucht dort, wo man sich wäscht.<br>
+  <em>Was tut ein Löwe?</em></p>
 
-  <input type="file" accept="image/*" id="fileInput"><br>
-  <img id="preview" style="max-width: 300px; display: block; margin-top: 10px;">
-  <br>
-  <button onclick="analyzeImage()">🔍 Zeichnung analysieren</button>
-  <p id="feedback"></p>
-  <div class="debug" id="debugOutput"></div>
+  <input type="text" id="answer" placeholder="Antwort eingeben...">
+  <button onclick="checkAnswer()">Antwort prüfen</button>
+  <p id="result"></p>
+
+  <div id="uploadSection" class="hidden">
+    <h3>📸 Lade ein Foto hoch (optional)</h3>
+    <input type="file" accept="image/*" onchange="previewFile()">
+    <img id="preview">
+  </div>
 
   <div id="next" class="hidden">
-    <h2>✅ Super! Scanne diesen QR-Code zur nächsten Station:</h2>
-    <img src="station_1_qr.png" alt="QR zur Navigation" style="width: 200px;">
-    <audio id="success" src="sound.mp3"></audio>
+    <h2>✅ Super! Weiter zur nächsten Station:</h2>
+    <img src="station_2_qr.png" alt="QR-Code zur Station 2">
   </div>
 
   <script>
-    let OPENAI_API_KEY = localStorage.getItem("openai_key") || "";
-
-    if (!OPENAI_API_KEY) {
-      const key = prompt("🔑 Bitte gib deinen OpenAI API-Key ein:");
-      if (key) {
-        OPENAI_API_KEY = key;
-        localStorage.setItem("openai_key", key);
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.trim().toLowerCase();
+      if (input.includes("brüllt") || input.includes("brüllen") || input.includes("laut")) {
+        document.getElementById("result").textContent = "Richtig! Jetzt kannst du ein Foto hochladen.";
+        document.getElementById("uploadSection").classList.remove("hidden");
+      } else {
+        document.getElementById("result").textContent = "Hmm, das ist noch nicht richtig. Tipp: Was macht ein Löwe?";
       }
     }
 
-    const fileInput = document.getElementById("fileInput");
-    const preview = document.getElementById("preview");
-    const feedback = document.getElementById("feedback");
-    const debug = document.getElementById("debugOutput");
-
-    fileInput.addEventListener("change", () => {
-      const file = fileInput.files[0];
+    function previewFile() {
+      const file = document.querySelector('input[type=file]').files[0];
+      const preview = document.getElementById("preview");
       const reader = new FileReader();
-      reader.onloadend = () => { preview.src = reader.result; };
-      if (file) reader.readAsDataURL(file);
-    });
-
-    async function analyzeImage() {
-      const file = fileInput.files[0];
-      if (!file) {
-        alert("Bitte lade zuerst ein Bild hoch.");
-        return;
-      }
-
-      feedback.textContent = "Bild wird analysiert…";
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Image = reader.result;
-        debug.textContent = `📦 Base64-Länge: ${base64Image.length}\n🔑 API-Key vorhanden: ${!!OPENAI_API_KEY}`;
-
-        try {
-          const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + OPENAI_API_KEY
-            },
-            body: JSON.stringify({
-              model: "gpt-4o",
-              messages: [
-                {
-                  role: "user",
-                  content: [
-                    { type: "text", text: "Beschreibe das hochgeladene Bild. Ist darauf eine Computermaus zu sehen?" },
-                    { type: "image_url", image_url: { url: base64Image } }
-                  ]
-                }
-              ],
-              max_tokens: 300
-            })
-          });
-
-          debug.textContent += `\n🌐 OpenAI Response Status: ${response.status}`;
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            feedback.textContent = "Fehler bei der Analyse:";
-            debug.textContent += `\n🧨 Fehlertext: ${errorText}`;
-            return;
-          }
-
-          const result = await response.json();
-          const description = result.choices[0].message.content.toLowerCase();
-          feedback.textContent = result.choices[0].message.content;
-
-          if (description.includes("affe") || description.includes("banane")) {
-            document.getElementById("next").classList.remove("hidden");
-            document.getElementById("success").play();
-          }
-        } catch (e) {
-          feedback.textContent = "Fehler bei der Analyse (JS-Fehler)";
-          debug.textContent += `\n❌ JavaScript-Fehler: ${e.message}`;
-        }
+      reader.onloadend = () => {
+        preview.src = reader.result;
+        document.getElementById("next").classList.remove("hidden");
       };
-
-      reader.readAsDataURL(file);
+      if (file) {
+        reader.readAsDataURL(file);
+      }
     }
   </script>
 </body>
