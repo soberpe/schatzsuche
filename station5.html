@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Station 5</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    .hidden { display: none; }
+    .progress { font-weight: bold; color: green; margin: 15px 0; }
+    #preview { max-width: 300px; display: block; margin-top: 10px; }
+    #next img { width: 200px; margin-top: 20px; }
+    select { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📍 Station 5</h1>
+
+  <!-- Teil 1: Tier erraten -->
+  <div id="riddleSection">
+    <p><strong>Wer bin ich?</strong></p>
+    <p id="hint">Hinweis 1: Ich bin sehr schnell.</p>
+    <input type="text" id="guess" placeholder="Deine Antwort...">
+    <button onclick="checkGuess()">Antwort prüfen</button>
+    <p id="riddleFeedback"></p>
+    <div id="riddleProgress" class="progress hidden">🎯 Geschafft! Nun folgt Aufgabe 2.</div>
+  </div>
+
+  <!-- Teil 2: Multiple Choice -->
+  <div id="quizSection" class="hidden">
+    <p><strong>Wie schnell kann ein Feldhase rennen?</strong></p>
+    <select id="quizAnswer">
+      <option value="">Bitte auswählen</option>
+      <option value="1">10 km/h</option>
+      <option value="2">25 km/h</option>
+      <option value="3">bis zu 70 km/h</option>
+    </select>
+    <button onclick="checkQuiz()">Antwort prüfen</button>
+    <p id="quizFeedback"></p>
+    <div id="quizProgress" class="progress hidden">✅ Sehr gut! Jetzt folgt Aufgabe 3.</div>
+  </div>
+
+  <!-- Teil 3: Kreativaufgabe -->
+  <div id="uploadSection" class="hidden">
+    <h3>🎨 Zeichne oder zeige etwas, das zu einem Hasen passt</h3>
+    <p>Zum Beispiel Karotten, lange Ohren oder einen Sprung…</p>
+    <input type="file" accept="image/*" onchange="previewFile()">
+    <img id="preview">
+  </div>
+
+  <!-- Erfolgsbereich -->
+  <div id="next" class="hidden">
+    <h2>🎉 SUPER GEMACHT!</h2>
+    <p>Scanne diesen Code, um zur nächsten Station zu gelangen:</p>
+    <img src="station_6_qr.png" alt="QR-Code zur Station 6">
+  </div>
+
+  <script>
+    const hints = [
+      "Hinweis 1: Ich bin sehr schnell.",
+      "Hinweis 2: Ich kann weit hüpfen.",
+      "Hinweis 3: Ich esse gerne Karotten.",
+      "Hinweis 4: Ich habe lange Ohren."
+    ];
+    let currentHint = 0;
+
+    function checkGuess() {
+      const input = document.getElementById("guess").value.trim().toLowerCase();
+      if (input.includes("hase")) {
+        document.getElementById("riddleFeedback").textContent = "Richtig! 🐰";
+        document.getElementById("riddleProgress").classList.remove("hidden");
+        setTimeout(() => {
+          document.getElementById("riddleSection").classList.add("hidden");
+          document.getElementById("quizSection").classList.remove("hidden");
+        }, 1000);
+      } else {
+        currentHint++;
+        if (currentHint < hints.length) {
+          document.getElementById("hint").textContent = hints[currentHint];
+          document.getElementById("riddleFeedback").textContent = "Noch nicht ganz. Hier kommt ein weiterer Hinweis:";
+        } else {
+          document.getElementById("riddleFeedback").textContent = "Letzter Hinweis – du schaffst das!";
+        }
+      }
+    }
+
+    function checkQuiz() {
+      const selected = document.getElementById("quizAnswer").value;
+      if (selected === "3") {
+        document.getElementById("quizFeedback").textContent = "Stimmt! Feldhasen erreichen bis zu 70 km/h!";
+        document.getElementById("quizProgress").classList.remove("hidden");
+        setTimeout(() => {
+          document.getElementById("quizSection").classList.add("hidden");
+          document.getElementById("uploadSection").classList.remove("hidden");
+        }, 1000);
+      } else {
+        document.getElementById("quizFeedback").textContent = "Nicht ganz. Versuch's nochmal!";
+      }
+    }
+
+    function previewFile() {
+      const file = document.querySelector('input[type=file]').files[0];
+      const preview = document.getElementById("preview");
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        preview.src = reader.result;
+        document.getElementById("next").classList.remove("hidden");
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
