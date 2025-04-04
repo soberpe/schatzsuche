@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Station 3</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    .hidden { display: none; }
+    #preview { max-width: 300px; display: block; margin-top: 10px; }
+    #next img { width: 200px; margin-top: 20px; }
+    select { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>📍 Station 3</h1>
+
+  <!-- Teil 1: Tier erraten -->
+  <div id="riddleSection">
+    <p><strong>Wer bin ich?</strong></p>
+    <p id="hint">Hinweis 1: Ich bin sehr groß und schwer.</p>
+    <input type="text" id="guess" placeholder="Deine Antwort...">
+    <button onclick="checkGuess()">Antwort prüfen</button>
+    <p id="riddleFeedback"></p>
+  </div>
+
+  <!-- Teil 2: Multiple Choice -->
+  <div id="quizSection" class="hidden">
+    <p><strong>Wie viel wiegt ein ausgewachsener Elefant ungefähr?</strong></p>
+    <select id="quizAnswer">
+      <option value="">Bitte auswählen</option>
+      <option value="1">500 kg</option>
+      <option value="2">5 Tonnen</option>
+      <option value="3">50 Tonnen</option>
+    </select>
+    <button onclick="checkQuiz()">Antwort prüfen</button>
+    <p id="quizFeedback"></p>
+  </div>
+
+  <!-- Teil 3: Kreativaufgabe -->
+  <div id="uploadSection" class="hidden">
+    <h3>🎨 Zeichne oder zeige etwas, das zu einem Elefanten passt</h3>
+    <p>Zum Beispiel einen Rüssel, Stoßzähne oder eine Wasserfontäne…</p>
+    <input type="file" accept="image/*" onchange="previewFile()">
+    <img id="preview">
+  </div>
+
+  <!-- Erfolgsbereich -->
+  <div id="next" class="hidden">
+    <h2>🎉 SUPER GEMACHT!</h2>
+    <p>Scanne diesen Code, um zur nächsten Station zu gelangen:</p>
+    <img src="station_4_qr.png" alt="QR-Code zur Station 4">
+  </div>
+
+  <script>
+    const hints = [
+      "Hinweis 1: Ich bin sehr groß und schwer.",
+      "Hinweis 2: Ich habe große Ohren und graue Haut.",
+      "Hinweis 3: Ich kann mit meinem langen Rüssel Wasser trinken und Dinge greifen.",
+      "Hinweis 4: Ich bin das größte Landtier der Welt."
+    ];
+    let currentHint = 0;
+
+    function checkGuess() {
+      const input = document.getElementById("guess").value.trim().toLowerCase();
+      if (input.includes("elefant")) {
+        document.getElementById("riddleFeedback").textContent = "Richtig! 🐘 Geschafft! Nun kommt Aufgabe 2.";
+        document.getElementById("riddleSection").classList.add("hidden");
+        document.getElementById("quizSection").classList.remove("hidden");
+      } else {
+        currentHint++;
+        if (currentHint < hints.length) {
+          document.getElementById("hint").textContent = hints[currentHint];
+          document.getElementById("riddleFeedback").textContent = "Noch nicht ganz. Hier kommt ein weiterer Hinweis:";
+        } else {
+          document.getElementById("riddleFeedback").textContent = "Letzter Hinweis – du schaffst das!";
+        }
+      }
+    }
+
+    function checkQuiz() {
+      const selected = document.getElementById("quizAnswer").value;
+      if (selected === "2") {
+        document.getElementById("quizFeedback").textContent = "Stimmt! Ein Elefant wiegt rund 5 Tonnen. Sehr gut! Jetzt folgt Aufgabe 3.";
+        document.getElementById("quizSection").classList.add("hidden");
+        document.getElementById("uploadSection").classList.remove("hidden");
+      } else {
+        document.getElementById("quizFeedback").textContent = "Nicht ganz. Versuch's nochmal!";
+      }
+    }
+
+    function previewFile() {
+      const file = document.querySelector('input[type=file]').files[0];
+      const preview = document.getElementById("preview");
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        preview.src = reader.result;
+        document.getElementById("next").classList.remove("hidden");
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
