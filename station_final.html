@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Finale Station</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    .hidden { display: none; }
+    .success { font-weight: bold; color: green; margin-top: 20px; font-size: 1.2em; }
+    input[type="number"] { width: 80px; margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <h1>🎁 Die letzte Station – Die Elster bringt den Schatz</h1>
+
+  <p>Wow, du hast alle Rätsel gelöst! 🥳<br>
+     Jetzt landet eine schlaue Elster bei dir – und sie hat den letzten Hinweis dabei.<br>
+     Mit dem richtigen Zahlencode kannst du die Schatzkiste öffnen! 🔐</p>
+
+  <h2>🔢 Rechne gut mit – und finde den 3-stelligen Code:</h2>
+
+  <form onsubmit="checkCode(event)">
+    <p>
+      1️⃣ Wie viele Tage hat der Monat März?<br>
+      <input type="number" id="riddle1" required>
+    </p>
+    <p>
+      2️⃣ Wie viele Beine hat eine Spinne, wenn sie 5 verliert?<br>
+      <input type="number" id="riddle2" required>
+    </p>
+    <p>
+      3️⃣ Wie viele Monate hat ein Jahr, wenn man 9 davon wegnimmt?<br>
+      <input type="number" id="riddle3" required>
+    </p>
+
+    <button type="submit">Code prüfen & Schatz öffnen!</button>
+  </form>
+
+  <div id="result" class="success hidden">
+    🎉 Richtig! Die Kiste klickt – und du hast den Schatz gefunden! 💰💎<br>
+    <strong>Der Code war 313.</strong>
+  </div>
+
+  <script>
+    function checkCode(event) {
+      event.preventDefault();
+      const r1 = document.getElementById("riddle1").value.trim();
+      const r2 = document.getElementById("riddle2").value.trim();
+      const r3 = document.getElementById("riddle3").value.trim();
+
+      const code = r1 + r2 + r3;
+      if (code === "313") {
+        document.getElementById("result").classList.remove("hidden");
+      } else {
+        alert("Hmm… das scheint noch nicht der richtige Code zu sein. Versuch’s nochmal!");
+      }
+    }
+  </script>
+</body>
+</html>
