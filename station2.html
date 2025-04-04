@@ -2,44 +2,47 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Station 2</title>
+  <title>Station 1</title>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
     .hidden { display: none; }
+    .progress { font-weight: bold; color: green; margin: 15px 0; }
     #preview { max-width: 300px; display: block; margin-top: 10px; }
     #next img { width: 200px; margin-top: 20px; }
     select { margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h1>📍 Station 2</h1>
+  <h1>📍 Station 1</h1>
 
   <!-- Teil 1: Tier erraten -->
   <div id="riddleSection">
     <p><strong>Wer bin ich?</strong></p>
-    <p id="hint">Hinweis 1: Ich esse gerne Obst.</p>
+    <p id="hint">Hinweis 1: Ich fresse Fleisch.</p>
     <input type="text" id="guess" placeholder="Deine Antwort...">
     <button onclick="checkGuess()">Antwort prüfen</button>
     <p id="riddleFeedback"></p>
+    <div id="riddleProgress" class="progress hidden">🎯 Geschafft! Nun folgt Aufgabe 2.</div>
   </div>
 
   <!-- Teil 2: Multiple Choice -->
   <div id="quizSection" class="hidden">
-    <p><strong>Wie viele verschiedene Affenarten gibt es ungefähr?</strong></p>
+    <p><strong>Wie viel Fleisch kann ein Löwe an einem Tag fressen?</strong></p>
     <select id="quizAnswer">
       <option value="">Bitte auswählen</option>
-      <option value="1">5</option>
-      <option value="2">50</option>
-      <option value="3">über 200</option>
+      <option value="1">1 kg</option>
+      <option value="2">1–10 kg</option>
+      <option value="3">11–100 kg</option>
     </select>
     <button onclick="checkQuiz()">Antwort prüfen</button>
     <p id="quizFeedback"></p>
+    <div id="quizProgress" class="progress hidden">✅ Sehr gut! Jetzt folgt Aufgabe 3.</div>
   </div>
 
   <!-- Teil 3: Kreativaufgabe -->
   <div id="uploadSection" class="hidden">
-    <h3>🎨 Zeichne oder zeige etwas, das zu einem Affen passt</h3>
-    <p>Zum Beispiel eine Banane, ein Baum oder ein kletterndes Tier…</p>
+    <h3>🎨 Zeichne ein Tier oder zeig etwas Passendes</h3>
+    <p>Zum Beispiel Mähne, Krallen oder Fleisch…</p>
     <input type="file" accept="image/*" onchange="previewFile()">
     <img id="preview">
   </div>
@@ -48,24 +51,27 @@
   <div id="next" class="hidden">
     <h2>🎉 SUPER GEMACHT!</h2>
     <p>Scanne diesen Code, um zur nächsten Station zu gelangen:</p>
-    <img src="station_3_qr.png" alt="QR-Code zur Station 3">
+    <img src="station_2_qr.png" alt="QR-Code zur Station 2">
   </div>
 
   <script>
     const hints = [
-      "Hinweis 1: Ich esse gerne Obst.",
-      "Hinweis 2: Ich bin gut im Klettern.",
-      "Hinweis 3: Ich lebe oft im Dschungel.",
-      "Hinweis 4: Ich liebe Bananen und mache manchmal „Oooh oooh aaah aaah!“"
+      "Hinweis 1: Ich fresse Fleisch.",
+      "Hinweis 2: Ich lebe in Gruppen, die man Rudel nennt.",
+      "Hinweis 3: Mein Gebrüll hört man kilometerweit.",
+      "Hinweis 4: Ich werde auch der König der Tiere genannt."
     ];
     let currentHint = 0;
 
     function checkGuess() {
       const input = document.getElementById("guess").value.trim().toLowerCase();
-      if (input.includes("affe")) {
-        document.getElementById("riddleFeedback").textContent = "Richtig! 🐒 Geschafft! Nun kommt Aufgabe 2.";
-        document.getElementById("riddleSection").classList.add("hidden");
-        document.getElementById("quizSection").classList.remove("hidden");
+      if (input.includes("löwe")) {
+        document.getElementById("riddleFeedback").textContent = "Richtig! 🦁";
+        document.getElementById("riddleProgress").classList.remove("hidden");
+        setTimeout(() => {
+          document.getElementById("riddleSection").classList.add("hidden");
+          document.getElementById("quizSection").classList.remove("hidden");
+        }, 1000);
       } else {
         currentHint++;
         if (currentHint < hints.length) {
@@ -80,9 +86,12 @@
     function checkQuiz() {
       const selected = document.getElementById("quizAnswer").value;
       if (selected === "3") {
-        document.getElementById("quizFeedback").textContent = "Stimmt! Es gibt über 200 Affenarten. Sehr gut! Jetzt folgt Aufgabe 3.";
-        document.getElementById("quizSection").classList.add("hidden");
-        document.getElementById("uploadSection").classList.remove("hidden");
+        document.getElementById("quizFeedback").textContent = "Stimmt! Ein Löwe kann bis zu 40 kg Fleisch fressen.";
+        document.getElementById("quizProgress").classList.remove("hidden");
+        setTimeout(() => {
+          document.getElementById("quizSection").classList.add("hidden");
+          document.getElementById("uploadSection").classList.remove("hidden");
+        }, 1000);
       } else {
         document.getElementById("quizFeedback").textContent = "Nicht ganz. Versuch's nochmal!";
       }
