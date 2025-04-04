@@ -1,44 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Station 1 – Löwe</title>
+  <title>Station 1</title>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
     .hidden { display: none; }
     #preview { max-width: 300px; display: block; margin-top: 10px; }
     #next img { width: 200px; margin-top: 20px; }
+    select { margin-top: 10px; }
   </style>
 </head>
 <body>
-  <h1>🦁 Station 1 – Löwe</h1>
-  <p><strong>Aufgabe:</strong> Der König der Tiere brüllt laut – doch sein Magen ist leer. Sucht dort, wo man sich wäscht.<br>
-  <em>Was tut ein Löwe?</em></p>
+  <h1>🦁 Station 1</h1>
 
-  <input type="text" id="answer" placeholder="Antwort eingeben...">
-  <button onclick="checkAnswer()">Antwort prüfen</button>
-  <p id="result"></p>
+  <!-- Teil 1: Tier erraten -->
+  <div id="riddleSection">
+    <p><strong>Wer bin ich?</strong></p>
+    <p id="hint">Hinweis 1: Ich fresse Fleisch.</p>
+    <input type="text" id="guess" placeholder="Deine Antwort...">
+    <button onclick="checkGuess()">Antwort prüfen</button>
+    <p id="riddleFeedback"></p>
+  </div>
 
+  <!-- Teil 2: Multiple Choice -->
+  <div id="quizSection" class="hidden">
+    <p><strong>Wie viel Fleisch kann ein Löwe an einem Tag fressen?</strong></p>
+    <select id="quizAnswer">
+      <option value="">Bitte auswählen</option>
+      <option value="1">1 kg</option>
+      <option value="2">1–10 kg</option>
+      <option value="3">11–100 kg</option>
+    </select>
+    <button onclick="checkQuiz()">Antwort prüfen</button>
+    <p id="quizFeedback"></p>
+  </div>
+
+  <!-- Teil 3: Kreativaufgabe -->
   <div id="uploadSection" class="hidden">
-    <h3>📸 Lade ein Foto hoch (optional)</h3>
+    <h3>🎨 Zeichne einen Löwen oder zeig etwas Passendes</h3>
     <input type="file" accept="image/*" onchange="previewFile()">
     <img id="preview">
   </div>
 
+  <!-- Erfolgsbereich -->
   <div id="next" class="hidden">
-    <h2>✅ Super! Weiter zur nächsten Station:</h2>
+    <h2>🎉 SUPER GEMACHT!</h2>
+    <p>Scanne diesen Code, um zur nächsten Station zu gelangen:</p>
     <img src="station_2_qr.png" alt="QR-Code zur Station 2">
   </div>
 
   <script>
-    function checkAnswer() {
-      const input = document.getElementById("answer").value.trim().toLowerCase();
-      if (input.includes("brüllt") || input.includes("brüllen") || input.includes("laut")) {
-        document.getElementById("result").textContent = "Richtig! Jetzt kannst du ein Foto hochladen.";
+    const hints = [
+      "Hinweis 1: Ich fresse Fleisch.",
+      "Hinweis 2: Ich lebe in Gruppen, die man Rudel nennt.",
+      "Hinweis 3: Mein Gebrüll hört man kilometerweit.",
+      "Hinweis 4: Ich werde auch der König der Tiere genannt."
+    ];
+    let currentHint = 0;
+
+    function checkGuess() {
+      const input = document.getElementById("guess").value.trim().toLowerCase();
+      if (input.includes("löwe")) {
+        document.getElementById("riddleFeedback").textContent = "Richtig! 🦁";
+        document.getElementById("riddleSection").classList.add("hidden");
+        document.getElementById("quizSection").classList.remove("hidden");
+      } else {
+        currentHint++;
+        if (currentHint < hints.length) {
+          document.getElementById("hint").textContent = hints[currentHint];
+          document.getElementById("riddleFeedback").textContent = "Noch nicht ganz. Hier kommt ein weiterer Hinweis:";
+        } else {
+          document.getElementById("riddleFeedback").textContent = "Letzter Hinweis – du schaffst das!";
+        }
+      }
+    }
+
+    function checkQuiz() {
+      const selected = document.getElementById("quizAnswer").value;
+      if (selected === "3") {
+        document.getElementById("quizFeedback").textContent = "Stimmt! Ein Löwe kann bis zu 40 kg Fleisch fressen.";
+        document.getElementById("quizSection").classList.add("hidden");
         document.getElementById("uploadSection").classList.remove("hidden");
       } else {
-        document.getElementById("result").textContent = "Hmm, das ist noch nicht richtig. Tipp: Was macht ein Löwe?";
+        document.getElementById("quizFeedback").textContent = "Nicht ganz. Versuch's nochmal!";
       }
     }
 
